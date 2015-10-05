@@ -12,6 +12,7 @@ all: EXEC
 
 EXEC: $(OBJECTS)
 	$(CC) $(OBJECTS) -o $(EXEC) -lcrypto -ljansson -lcurl -g
+	rm -rf $(OBJECTS)
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) $< -o $@

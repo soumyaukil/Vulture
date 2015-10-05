@@ -1,0 +1,12 @@
+{
+  "Verbose": true,
+  "PriceLevel": [0.30,0.50,0.80,1.30,1.90,2.70],
+  "WaitTimeBetweenTrades": 0.5,
+  "WaitTimeForExitTrade": 60.0,
+  "MaxLossAmount": 500,
+  "symbol": "btc_cny",
+  "volumn": "0.01",
+
+  "OkCoinChinaApiKey": "101f7150-86f8-4b84-b368-5a35d87f8ca9",
+  "OkCoinChinaSecretKey": "26432B4AA04FA577CE421A05AFB49175"
+}
