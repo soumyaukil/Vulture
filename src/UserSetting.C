@@ -6,6 +6,7 @@ bool UserSetting::initialize(json_t *root)
 	_verbose = json_boolean_value(json_object_get(root, "Verbose"));
 	_waitTime = json_real_value(json_object_get(root, "WaitTimeBetweenTrades"));
 	_waitTimeForExitTrade = json_real_value(json_object_get(root, "WaitTimeForExitTrade"));
+	_tickerDataQueryTime = json_real_value(json_object_get(root, "TickerDataQueryTime"));
 	json_t *array = json_object_get(root, "PriceLevel");
 	int size = json_array_size(array);
 	for(int i=0;i<size;++i)

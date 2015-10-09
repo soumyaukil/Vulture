@@ -26,9 +26,31 @@ std::string OKCoinChina::convertToType(T value)
 	return o.str();
 }
 
-void OKCoinChina::getBestBidAndAsk(CURL* curl, double &bid, double &ask)
+OKCoinChina::~OKCoinChina()
 {
-	double quote = 0.0;
+	t1.join();
+}
+
+bool OKCoinChina::initialize(UserSetting &userSetting)
+{
+	curl_global_init(CURL_GLOBAL_ALL);
+	curl = curl_easy_init();
+	populateBestBidAndLowestAsk();
+	t1 = std::thread(&OKCoinChina::populateBestBidAndLowestAskPeriodicallyWithDelay, this, userSetting.getTickerDataQueryTime());
+	return true;
+}
+
+void OKCoinChina::populateBestBidAndLowestAskPeriodicallyWithDelay(double delay)
+{
+	while(1)
+	{
+		populateBestBidAndLowestAsk();
+		sleep(delay);
+	}
+}
+
+void OKCoinChina::populateBestBidAndLowestAsk()
+{
 	json_t *root = getJsonFromUrl(curl, "https://www.okcoin.cn/api/v1/ticker.do", "");
 	if(root)
 	{
@@ -37,7 +59,7 @@ void OKCoinChina::getBestBidAndAsk(CURL* curl, double &bid, double &ask)
 	}
 }
 
-bool OKCoinChina::userInfo(CURL *curl, UserSetting &userSetting, std::string &error, UserInfo &userInfo)
+bool OKCoinChina::userInfo(UserSetting &userSetting, std::string &error, UserInfo &userInfo)
 {
 	std::string url = "https://www.okcoin.cn/api/v1/userinfo.do?";
 	std::string params = "api_key=" + userSetting.getKey()._apiKey;
@@ -61,7 +83,7 @@ bool OKCoinChina::userInfo(CURL *curl, UserSetting &userSetting, std::string &er
 	return false;
 }
 
-bool OKCoinChina::getOrderInfo(CURL *curl, UserSetting &userSetting, int orderId, std::string &error, OrderInfo &orderInfo)
+bool OKCoinChina::getOrderInfo(UserSetting &userSetting, int orderId, std::string &error, OrderInfo &orderInfo)
 {
 	std::string url = "https://www.okcoin.cn/api/v1/order_info.do?";
 	std::string params = "api_key=" + userSetting.getKey()._apiKey + 
@@ -87,7 +109,7 @@ bool OKCoinChina::getOrderInfo(CURL *curl, UserSetting &userSetting, int orderId
 	return false;
 }
 
-bool OKCoinChina::sendOrder(CURL *curl, UserSetting &userSetting, std::string direction, double price,std::string &error, int &orderId)
+bool OKCoinChina::sendOrder(UserSetting &userSetting, std::string direction, double price,std::string &error, int &orderId)
 {
 	std::string url = "https://www.okcoin.cn/api/v1/trade.do?";
 	std::string params = "amount=" + userSetting.getVolumn() + 

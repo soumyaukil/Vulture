@@ -1,7 +1,7 @@
 # Blackhawk makefile
 
 CC = g++
-CFLAGS = -c -g -Wall -O2
+CFLAGS = -std=c++0x -c -g -Wall -O2
 
 EXEC = Vulture
 SOURCES = $(wildcard src/*.C)
@@ -14,7 +14,7 @@ EXEC: $(OBJECTS)
 	$(CC) $(OBJECTS) -o $(EXEC) -lcrypto -ljansson -lcurl -g
 	rm -rf $(OBJECTS)
 
-%.o: %.cpp
+%.o: %.C
 	$(CC) $(CFLAGS) $< -o $@
 
 clearscreen:

@@ -21,6 +21,7 @@ class UserSetting
 	std::vector<double> getPriceLevel(){return _priceLevel;}
 	double getWaitTime(){return _waitTime;}
 	double getWaitTimeForExitTrade(){return _waitTimeForExitTrade;}
+	double getTickerDataQueryTime(){return _tickerDataQueryTime;}
 	unsigned getMaxLossAmount(){return _maxLossAmount;}
 	std::string getSymbol(){return _symbol;}
 	std::string getVolumn(){return _volumn;}
@@ -31,6 +32,7 @@ class UserSetting
 	std::vector<double> _priceLevel;
 	double              _waitTime;
 	double		    _waitTimeForExitTrade;
+	double		    _tickerDataQueryTime;
 	unsigned            _maxLossAmount;
 
 	std::string         _symbol;
