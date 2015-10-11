@@ -83,17 +83,21 @@ void OrderManager::start()
 		//At least one bid has been fully filled.
 		else
 		{
+			if(userSettings.isVerbosed())
+				std::cout << "Cancelling all ask order since there is at least one fully filled bid request." << std::endl;
 			for(int j=0;j<askOrderIDs.size();++j)
 			{
 				if(!okCoinChina.cancelOrder(askOrderIDs[j], userSettings.getSymbol(), errorMessage))
-					std::cerr << errorMessage;
+					std::cerr << "Cancelling ask order failed. OrderID: " << askOrderIDs[j] << ". Message: " << errorMessage << std::endl;
 			}
+			if(userSettings.isVerbosed())
+				std::cout << "Cancelling all bid order since there is at least one fully filled bid request." << std::endl;
 			for(int j=0;j<bidOrderIDs.size();++j)
 			{
 				if(j != i)
 				{
 					if(!okCoinChina.cancelOrder(bidOrderIDs[i], userSettings.getSymbol(), errorMessage))
-						std::cerr << errorMessage;
+						std::cerr << "Cancelling bid order failed. OrderID: " << bidOrderIDs[j] << ". Message: " << errorMessage;
 					sleep(1);
 				}
 			}
@@ -112,46 +116,47 @@ void OrderManager::sendOrdersInBatch(const double &bid,const double &ask,const s
 		int j;
 		std::vector<double> priceList;
 
-		for(j=0;j < priceLevel.size() && j < 5; ++j)
+		for(j=i;j < priceLevel.size() && j < (5 + i); ++j)
 			priceList.push_back(bid - priceLevel[j]);
 		if(!okCoinChina.sendBatchOrder(symbol, volumn,"buy",priceList, j, errorMessage, bidOrderIDs))
 		{
 			std::cerr << "Error occured while placing buy order. Message: " << errorMessage << std::endl;
 		}
-		else if(userSettings.isVerbosed())
+	}
+	if(userSettings.isVerbosed())
+	{
+		std::cout << "Placed buy order.  IDs: [";
+		for(int j=0;j<bidOrderIDs.size();++j)
 		{
-			std::cout << "Placed buy order.  IDs: [";
-			for(int j=0;j<bidOrderIDs.size();++j)
-			{
-				std::cout << bidOrderIDs[j];
-				if(j < bidOrderIDs.size() - 1)
-					std::cout << ",";
-			}
-			std::cout << "]" << std::endl;
+			std::cout << bidOrderIDs[j];
+			if(j < bidOrderIDs.size() - 1)
+				std::cout << ",";
 		}
+		std::cout << "]" << std::endl;
 	}
 	for(int i=0;i<priceLevel.size();i+=5)
 	{
 		int j;
 		std::vector<double> priceList;
 
-		for(j=0;j < priceLevel.size() && j < 5; ++j)
+		for(j=i;j < priceLevel.size() && j < (5 + i); ++j)
 			priceList.push_back(ask + priceLevel[j]);
 
 		if(!okCoinChina.sendBatchOrder(symbol, volumn, "sell", priceList, j, errorMessage, askOrderIDs))
 		{
 			std::cerr << "Error occured while placing ask order. Message: " << errorMessage << std::endl;
 		}
-		else if(userSettings.isVerbosed())
-		{
-			std::cout << "Placed sell order. IDs: [";
-			for(int j=0;j<askOrderIDs.size();++j)
-			{
-				std::cout << askOrderIDs[j];
-				if(j < askOrderIDs.size() - 1)
-					std::cout << ",";
-			}
-			std::cout << "]" << std::endl;
-		}
 	}
+	if(userSettings.isVerbosed())
+	{
+		std::cout << "Placed sell order. IDs: [";
+		for(int j=0;j<askOrderIDs.size();++j)
+		{
+			std::cout << askOrderIDs[j];
+			if(j < askOrderIDs.size() - 1)
+				std::cout << ",";
+		}
+		std::cout << "]" << std::endl;
+	}
+
 }
