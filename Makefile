@@ -21,4 +21,4 @@ clearscreen:
 	clear
 
 clean:
-	rm -rf core $(OBJECTS)
+	rm -rf $(EXEC) $(OBJECTS)
