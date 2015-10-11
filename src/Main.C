@@ -11,11 +11,7 @@
 #include "OrderManager.H"
 #include "UserSetting.H"
 #include "base64.H"
-#include "result.H"
-#include "time_fun.H"
 #include "curl_fun.H"
-#include "parameters.H"
-#include "send_email.H"
 #include "OKCoinChina.H"
 
 int main(int argc, char **argv) {
@@ -30,16 +26,16 @@ int main(int argc, char **argv) {
     OKCoinChina okCoinChina;
 
     if (!root) {
-        std::cout << "ERROR: config.json incorrect (" << error.text << ")\n" << std::endl;
+        std::cerr << "ERROR: config.json incorrect (" << error.text << ")\n" << std::endl;
         return 1;
     }
-    if(userSettings.initialize(root)) {
+    if(userSettings.initialize(root) && userSettings.isVerbosed()) {
         std::cout << "Config values have been passed successfully" << std::endl;
     }
     OrderManager orderMgr(okCoinChina,userSettings);
     if(!orderMgr.initialize())
     {
-	std::cout << "Error to initialize OrderMgr. Exit.." << std::endl;
+	std::cerr << "Error to initialize OrderMgr. Exit.." << std::endl;
 	return -1;
     }
     orderMgr.start();
