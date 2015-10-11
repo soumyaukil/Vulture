@@ -17,4 +17,5 @@ bool UserSetting::initialize(json_t *root)
 	
 	_symbol = json_string_value(json_object_get(root, "symbol"));
 	_volumn = json_string_value(json_object_get(root, "volumn"));
+	return true;
 }
