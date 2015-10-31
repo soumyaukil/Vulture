@@ -11,6 +11,8 @@ class UserInfo
 			double btc;
 			double cny;
 			double ltc;
+
+			Amount():btc(-1),cny(-1),ltc(-1){}
 		};
 
 	public:
