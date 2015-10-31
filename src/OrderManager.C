@@ -1,4 +1,5 @@
 #include "OrderManager.H"
+#include <unistd.h>
 #include <iostream>
 
 OrderManager::OrderManager(OKCoinChina &okCoinChina_,UserSetting &userSettings_):okCoinChina(okCoinChina_),userSettings(userSettings_)
